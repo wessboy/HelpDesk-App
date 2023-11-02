@@ -1,0 +1,134 @@
+﻿@model IEnumerable<HelpDesk.Areas.Identity.Data.Complaint>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Complaints</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Action)
+            </th>
+            <th>
+                Created on
+            </th>
+            <th>
+                Resolved on
+            </th>
+            
+                <th>
+                    @Html.DisplayNameFor(model => model.User)
+                </th>
+            
+            <th>
+                @if (User.IsInRole("Technician"))
+                {
+                    <text>Close</text>
+                }
+                else
+                {
+                    <text>Approve</text>
+                    }
+                
+            </th>
+            <th>
+
+            </th>
+            <th>
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+
+                </td>
+
+                <td>
+                    @if (!string.IsNullOrEmpty(item.Action))
+                    {
+                        @Html.DisplayFor(modelItem => item.Action)
+                    }
+                    else
+                    {
+                        <text>No action taken</text>
+                    }
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreated)
+                </td>
+
+                <td>
+                    @if (item.Status == "not yet processed")
+                    {
+                        <text> watinig to be resolved</text>
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.DateResolved)
+                    }
+                </td>
+                
+                
+                    <td>
+                        @Html.DisplayFor(modelItem => item.User.Email)
+                    </td>
+                <td>
+                    @if (User.IsInRole("Technician"))
+                    {
+                        <a asp-action="Close" asp-route-id="@item.Id">Close</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Approve" asp-route-id="@item.Id">Approve</a>
+                    }
+                    
+                </td>
+                
+                <td>
+                    @if (User.IsInRole("Technician"))
+                    {
+                        <a asp-action="Process" asp-route-id="@item.Id">Process</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+
+                    }
+                </td>
+                <td>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+                
+            </tr>
+        }
+    </tbody>
+</table>
